@@ -1,41 +1,52 @@
 <template>
-  <v-container class="login-page">
-    <v-row align="center" justify="center">
-      <v-col cols="12" sm="8" md="4">
-        <v-card elevation="6" light>
-          <v-card-title class="headline">Login</v-card-title>
-          <v-card-text>
-            <v-form @submit.prevent="login">
-              <v-text-field
-                v-model="email"
-                label="Email"
-                outlined
-                required
-                type="email"
-              ></v-text-field>
+  <div class="login-page">
+    <v-card elevation="6" class="login-form-card" light>
+      <h1 class="text-center grey--text darken-3">Login</h1>
+      <v-card-title class="grey--text darken-3">Welcome</v-card-title>
+      <v-card-subtitle class="grey--text darken-1"
+        >sing-in to your account</v-card-subtitle
+      >
+      <v-card-text>
+        <v-form @submit.prevent="login">
+          <v-text-field
+            v-model="email"
+            :rules="emailValidationRules"
+            label="Email or Username"
+            outlined
+            required
+            type="email"
+          ></v-text-field>
 
-              <v-text-field
-                v-model="password"
-                label="Password"
-                outlined
-                required
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPassword ? 'text' : 'password'"
-                @click:append="showPassword = !showPassword"
-              ></v-text-field>
-
-              <v-btn type="submit" color="primary" block> Login </v-btn>
-            </v-form>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <img
-        src="../static/loginback.png"
-        alt="loginback"
-        class="login-page-image"
-      />
-    </v-row>
-  </v-container>
+          <v-text-field
+            v-model="password"
+            label="Password"
+            outlined
+            required
+            :rules="passwordValidationRules"
+            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPassword ? 'text' : 'password'"
+            @click:append="showPassword = !showPassword"
+          ></v-text-field>
+          <v-row justify="space-between" align="center">
+            <v-col>
+              <v-checkbox v-model="rememberMe" label="Remember Me"></v-checkbox>
+            </v-col>
+            <v-col>
+              <v-btn text color="primary">Forgot Password?</v-btn>
+            </v-col>
+          </v-row>
+          <v-btn type="submit" color="primary white--text" block>
+            sign in
+          </v-btn>
+        </v-form>
+      </v-card-text>
+    </v-card>
+    <img
+      src="../static/loginback.png"
+      alt="loginback"
+      class="login-page-image"
+    />
+  </div>
 </template>
 
 <script>
@@ -47,6 +58,25 @@ export default {
       email: '',
       password: '',
       showPassword: false,
+      rememberme: false,
+      emailValidationRules: [
+        (value) => !!value || 'This field is required',
+        (value) =>
+          value.indexOf('@') !== 0 ||
+          "Please Enter a valid Email eg:'abc@xyz.com'",
+        (value) =>
+          value.includes('@') !== 0 ||
+          "Please Enter a valid Email eg:'abc@xyz.com'",
+        (value) =>
+          value.indexOf('.') - value.indexOf('@') > 1 ||
+          "Please Enter a valid Email eg:'abc@xyz.com'",
+      ],
+      passwordValidationRules: [(value) => !!value || 'This field is required'],
+    }
+  },
+  head() {
+    return {
+      title: 'Login Page',
     }
   },
   methods: {
@@ -68,6 +98,11 @@ export default {
   justify-content: center;
   align-items: center;
   position: relative;
+  .login-form-card {
+    position: absolute;
+    width: 25rem;
+    z-index: 1;
+  }
   &-image {
     position: absolute;
     bottom: 0;
